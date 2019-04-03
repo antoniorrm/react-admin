@@ -3,15 +3,17 @@ import assert from 'assert';
 import { shallow } from 'enzyme';
 import { BooleanField } from './BooleanField';
 
+const defaultProps = {
+    record: { published: true },
+    source: 'published',
+    resource: 'posts',
+    translate: x => x,
+    classes: {}
+};
+
 describe('<BooleanField />', () => {
     it('should display tick and truthy text if value is true', () => {
-        const wrapper = shallow(
-            <BooleanField
-                record={{ published: true }}
-                source="published"
-                resource="posts"
-            />
-        );
+        const wrapper = shallow(<BooleanField {...defaultProps} />);
         assert.ok(wrapper.first().is('WithStyles(Typography)'));
         assert.equal(wrapper.first().find('pure(Done)').length, 1);
         assert.equal(
@@ -24,14 +26,7 @@ describe('<BooleanField />', () => {
     });
 
     it('should display tick and custom truthy text if value is true', () => {
-        const wrapper = shallow(
-            <BooleanField
-                record={{ published: true }}
-                source="published"
-                resource="posts"
-                valueLabelTrue="Has been published"
-            />
-        );
+        const wrapper = shallow(<BooleanField {...defaultProps} valueLabelTrue="Has been published" />);
         assert.ok(wrapper.first().is('WithStyles(Typography)'));
         assert.equal(wrapper.first().find('pure(Done)').length, 1);
         assert.equal(
@@ -44,13 +39,7 @@ describe('<BooleanField />', () => {
     });
 
     it('should display cross and falsy text if value is false', () => {
-        const wrapper = shallow(
-            <BooleanField
-                record={{ published: false }}
-                source="published"
-                resource="posts"
-            />
-        );
+        const wrapper = shallow(<BooleanField {...defaultProps} record={{ published: false }} />);
 
         assert.ok(wrapper.first().is('WithStyles(Typography)'));
         assert.equal(wrapper.first().find('pure(Clear)').length, 1);
@@ -66,9 +55,8 @@ describe('<BooleanField />', () => {
     it('should display tick and custom falsy text if value is true', () => {
         const wrapper = shallow(
             <BooleanField
+                {...defaultProps}
                 record={{ published: false }}
-                source="published"
-                resource="posts"
                 valueLabelFalse="Has not been published yet"
             />
         );
@@ -84,29 +72,21 @@ describe('<BooleanField />', () => {
     });
 
     it('should not display anything if value is null', () => {
-        const wrapper = shallow(
-            <BooleanField record={{ published: null }} source="published" />
-        );
+        const wrapper = shallow(<BooleanField {...defaultProps} record={{ published: null }} source="published" />);
 
         assert.equal(wrapper.first().children().length, 0);
     });
 
     it('should use custom className', () =>
         assert.deepEqual(
-            shallow(
-                <BooleanField
-                    record={{ foo: true }}
-                    source="foo"
-                    className="foo"
-                />
-            ).prop('className'),
+            shallow(<BooleanField {...defaultProps} record={{ foo: true }} source="foo" className="foo" />).prop(
+                'className'
+            ),
             'foo'
         ));
 
     it('should handle deep fields', () => {
-        const wrapper = shallow(
-            <BooleanField record={{ foo: { bar: true } }} source="foo.bar" />
-        );
+        const wrapper = shallow(<BooleanField {...defaultProps} record={{ foo: { bar: true } }} source="foo.bar" />);
         assert.ok(wrapper.first().is('WithStyles(Typography)'));
         assert.equal(wrapper.first().find('pure(Done)').length, 1);
     });
