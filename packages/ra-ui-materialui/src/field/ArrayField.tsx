@@ -2,12 +2,13 @@ import React, { Component, cloneElement, Children } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import pure from 'recompose/pure';
+import { types as coreTypes } from 'ra-core';
 
 import { FieldProps } from './types';
 
 interface State {
     data: object;
-    ids: string[];
+    ids: coreTypes.Identifier[];
 }
 
 const initialState = {

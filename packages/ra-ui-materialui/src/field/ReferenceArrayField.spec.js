@@ -9,6 +9,7 @@ describe('<ReferenceArrayField />', () => {
     it('should render a loading indicator when related records are not yet fetched', () => {
         const wrapper = shallow(
             <ReferenceArrayFieldView
+                classes={{}}
                 record={{ barIds: [1, 2] }}
                 resource="foo"
                 reference="bar"

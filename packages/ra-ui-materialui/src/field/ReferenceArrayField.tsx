@@ -1,17 +1,34 @@
-import React, { Children } from 'react';
+import React, { Children, SFC } from 'react';
 import PropTypes from 'prop-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { withStyles, createStyles } from '@material-ui/core/styles';
-import { ReferenceArrayFieldController } from 'ra-core';
+import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
+
+import {
+    ReferenceArrayFieldController,
+    crudGetManyAccumulate as crudGetManyAccumulateAction,
+} from 'ra-core';
+import { types as coreTypes } from 'ra-core';
+import { FieldProps } from './types';
 
 const styles = createStyles({
     progress: { marginTop: '1em' },
 });
 
-export const ReferenceArrayFieldView = ({
+interface ViewProps extends FieldProps, WithStyles<typeof styles> {
+    ids: coreTypes.Identifier[];
+    reference: string;
+    referenceBasePath?: string;
+    loadedOnce?: boolean;
+    data?: any;
+    crudGetManyAccumulate: coreTypes.Dispatch<
+        typeof crudGetManyAccumulateAction
+    >;
+}
+
+export const ReferenceArrayFieldView: SFC<ViewProps> = ({
     children,
     className,
-    classes = {},
+    classes,
     data,
     ids,
     loadedOnce,
@@ -31,17 +48,6 @@ export const ReferenceArrayFieldView = ({
         basePath: referenceBasePath,
         currentSort: {},
     });
-};
-
-ReferenceArrayFieldView.propTypes = {
-    classes: PropTypes.object,
-    className: PropTypes.string,
-    data: PropTypes.object,
-    ids: PropTypes.array,
-    loadedOnce: PropTypes.bool,
-    children: PropTypes.element.isRequired,
-    reference: PropTypes.string.isRequired,
-    referenceBasePath: PropTypes.string,
 };
 
 /**
@@ -76,7 +82,22 @@ ReferenceArrayFieldView.propTypes = {
  * </ReferenceArrayField>
  *
  */
-export const ReferenceArrayField = ({ children, ...props }) => {
+
+interface Props extends FieldProps, WithStyles<typeof styles> {
+    ids: coreTypes.Identifier[];
+    resource: string;
+    reference: string;
+    referenceBasePath?: string;
+    loadedOnce?: boolean;
+    data?: any;
+    crudGetManyAccumulate: coreTypes.Dispatch<
+        typeof crudGetManyAccumulateAction
+    >;
+    source: string;
+    basePath: string;
+    id: coreTypes.Identifier;
+}
+export const ReferenceArrayField: SFC<Props> = ({ children, ...props }) => {
     if (React.Children.count(children) !== 1) {
         throw new Error(
             '<ReferenceArrayField> only accepts a single child (like <Datagrid>)'
@@ -93,20 +114,6 @@ export const ReferenceArrayField = ({ children, ...props }) => {
             )}
         </ReferenceArrayFieldController>
     );
-};
-
-ReferenceArrayField.propTypes = {
-    addLabel: PropTypes.bool,
-    basePath: PropTypes.string.isRequired,
-    classes: PropTypes.object,
-    className: PropTypes.string,
-    children: PropTypes.element.isRequired,
-    label: PropTypes.string,
-    record: PropTypes.object.isRequired,
-    reference: PropTypes.string.isRequired,
-    resource: PropTypes.string.isRequired,
-    sortBy: PropTypes.string,
-    source: PropTypes.string.isRequired,
 };
 
 const EnhancedReferenceArrayField = withStyles(styles)(ReferenceArrayField);

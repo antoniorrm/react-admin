@@ -1,7 +1,9 @@
+import { types as coreTypes } from 'ra-core';
+
 export interface FieldProps {
     addLabel?: boolean;
     basePath?: string;
-    record?: object;
+    record?: coreTypes.Record;
     sortBy?: string;
     source?: string;
     label?: string;
